@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
   name: platform
-  namespace: platform
+  namespace: argocd
 spec: # be persmissive for now
   sourceRepos:
   - '*'

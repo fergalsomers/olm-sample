@@ -5,4 +5,9 @@ metadata:
   namespace: platform
   labels:
     app: platform
-spec: {}
+spec:
+  config:
+   env: 
+    - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
+      value: platform
+
