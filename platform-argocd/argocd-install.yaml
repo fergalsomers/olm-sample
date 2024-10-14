@@ -1,8 +1,8 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ArgoCD
 metadata:
-  name: basic-argocd
-  namespace: argocd
+  name: platform-argocd
+  namespace: platform
   labels:
-    example: basic
+    app: platform
 spec: {}

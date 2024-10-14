@@ -1,0 +1,4 @@
+resources:
+# - ./namespace.yaml
+- ./platform-project.yaml
+- ./platform-app.yaml

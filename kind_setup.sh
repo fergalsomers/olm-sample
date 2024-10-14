@@ -79,8 +79,8 @@ echo "Installing ArgoCD"
 
 kubectl wait --for=condition=Installed "clusterextensions/argocd" --timeout="60s"
 
-kubectl apply -f ./config/argocd-install.yaml
+kubectl apply -k ./platform-argocd
 
-kubectl wait --for='jsonpath={.status.server}="Running"' argocd/basic-argocd -n argocd --timeout="60s"
+kubectl wait --for='jsonpath={.status.server}="Running"' argocd/platform-argocd -n platform --timeout="60s"
 
 echo "ArgoCD running"

@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform
+  namespace: platform
+spec:
+  project: platform
+  source:
+    repoURL: https://github.com/fergalsomers/olm-sample.git
+    targetRevision: HEAD
+    path: base
+    directory:
+      recurse: true # 
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform
+

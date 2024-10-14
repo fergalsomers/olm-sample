@@ -39,6 +39,26 @@ cat catalog.json |  jq -s '.[] | select( .schema == "olm.bundle" ) | select( .pa
 ```
 
 
+# To view ArgoCD UI
+
+First get the password
+
+```
+kubectl -n platform get secret platform-argocd-cluster -o jsonpath='{.data.admin\.password}' | base64 -d
+```
+
+See https://argocd-operator.readthedocs.io/en/latest/usage/basics/
+
+
+Next port-forward to argocd server
+
+```
+kubectl port-forward -n platform service/platform-argocd-server 8001:80
+```
+
+Click on following URL in your browser : https://localhost:8001/applications
+
+
 # hack tools to interact with catalog service
 
 OperatorHub provides some scripts to interact and process catalog services  
