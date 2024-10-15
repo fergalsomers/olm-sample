@@ -1,19 +1,31 @@
-# olm-sample
+# Context  <!-- omit from toc -->
+This repo illustrates usage of [Operator Lifecycle Mangager](https://operator-framework.github.io/operator-controller/) (OLM) and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) to install standard services via GitOps
+on a local [kind](https://kind.sigs.k8s.io/) cluster.
 
-This repo tests some configuations of Operator Lifecycle Mangager
-
-
-- install taken originally from https://operator-framework.github.io/operator-controller/getting-started/olmv1_getting_started/
-- catalog ^^^ upgraded to 0.31.0
+- OLM install taken originally from https://operator-framework.github.io/operator-controller/getting-started/olmv1_getting_started/
+- OLMv1 catalog upgraded to 0.31.0
 - built using kind - so that you can run kubernetes locally on your laptop.
 
-# Prerequisites
+Contents
 
-1. Install kind - for mac "brew install kind"
-1. Install kubectl - for mac "brew install kubectl"
+- [Pre-requisites](#pre-requisites)
+- [How to install](#how-to-install)
+- [To view ArgoCD UI](#to-view-argocd-ui)
+- [To view Grafana](#to-view-grafana)
+- [To run queries against the OLM catalog](#to-run-queries-against-the-olm-catalog)
+- [OLM Tools you will need to configure RBAC for an Operator (from OLM)](#olm-tools-you-will-need-to-configure-rbac-for-an-operator-from-olm)
+- [To clean up](#to-clean-up)
+- [To Do](#to-do)
+- [Notes](#notes)
 
 
-# How to use
+# Pre-requisites
+
+1. Install [kind](https://kind.sigs.k8s.io/) - for mac "brew install kind"
+1. Install [kubectl](https://kubernetes.io/docs/reference/kubectl/) - for mac "brew install kubectl"
+1. Install [git](https://git-scm.com/) - git comes with Xcode on mac. 
+
+# How to install
 
 Clone the repo and 
 
