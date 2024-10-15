@@ -1,3 +1,5 @@
 resources:
 - ./opa-gatekeeper
-- ./monitoring
+- ./prometheus-operator
+- ./prometheus-monitoring
+
