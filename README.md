@@ -97,6 +97,9 @@ Generate manifests for a specific bundle and version, .e.g
 
 # WIP
 
+OLM has issues (v1 vs ArgoCD) - switching to manual install of argocd
+
+
 ```
 
 ~/build/git/olm-sample > kc get cm argocd-cmd-params-cm  -n argocd -o yaml

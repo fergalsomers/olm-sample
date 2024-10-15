@@ -90,4 +90,10 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 
 kubectl wait --for='jsonpath={.status.availableReplicas}'=1 deployment/argocd-server -n  argocd --timeout="60s"
 
-echo "ArgoCD running"
+echo "ArgoCD is running"
+
+echo "Installing the boot application" 
+
+kubectl apply -k boot-application
+
+echo "Boot application has been configured" 
