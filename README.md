@@ -5,11 +5,71 @@ This repo tests some configuations of Operator Lifecycle Mangager
 
 - install taken originally from https://operator-framework.github.io/operator-controller/getting-started/olmv1_getting_started/
 - catalog ^^^ upgraded to 0.31.0
-- argocd operator installed by default
-- basic argocd installation also installed (allowing you to move to argocd installation)
+- built using kind - so that you can run kubernetes locally on your laptop.
+
+# Prerequisites
+
+1. Install kind - for mac "brew install kind"
+1. Install kubectl - for mac "brew install kubectl"
 
 
-# To view catalog
+# How to use
+
+Clone the repo and 
+
+```
+git clone https://github.com/fergalsomers/olm-sample.git
+cd olm-sample
+./kind.sh
+```
+
+This will:
+
+1. Create a kind cluster call `olm-sample`
+1. Create a kubeconfig in olm-sample directory. 
+1. Install the Operator Lifecycle Manager (OLMv1)
+1. Install ArgoCD in `argocd` namespace. 
+
+This ArgoCD will then start booting some default configurations:
+
+- OPA Gatekeeper 
+- Prometheus Operator (via OLM) 
+- Kube-prometheus monitoring stack (via Prometheus operator) - https://github.com/prometheus-operator/kube-prometheus. This installs everything you need including Grafana and alertmanager (at least for dev). 
+
+# To view ArgoCD UI
+
+First get the password
+
+```
+kubectl -n platform get secret platform-argocd-cluster -o jsonpath='{.data.admin\.password}' | base64 -d
+```
+
+See https://argocd-operator.readthedocs.io/en/latest/usage/basics/
+
+
+Next port-forward to argocd server
+
+```
+kubectl port-forward -n platform service/platform-argocd-server 8001:80
+```
+
+Click on following URL in your browser : https://localhost:8001/applications
+
+
+# To view Grafana
+
+```
+kubectl port-forward -n monitoring service/grafana 3000
+```
+
+Click on following URL in your browser : https://localhost:3000/
+
+Uses the default grafana password admin/admin - you are prompted to change this on login.
+
+
+# To run queries against the OLM catalog
+
+So that you can see what bundles are possible to install...
 
 port forward to the service
 
@@ -38,28 +98,7 @@ Get external-secrets versions
 cat catalog.json |  jq -s '.[] | select( .schema == "olm.bundle" ) | select( .package == "external-secrets-operator") | .name'
 ```
 
-
-# To view ArgoCD UI
-
-First get the password
-
-```
-kubectl -n platform get secret platform-argocd-cluster -o jsonpath='{.data.admin\.password}' | base64 -d
-```
-
-See https://argocd-operator.readthedocs.io/en/latest/usage/basics/
-
-
-Next port-forward to argocd server
-
-```
-kubectl port-forward -n platform service/platform-argocd-server 8001:80
-```
-
-Click on following URL in your browser : https://localhost:8001/applications
-
-
-# hack tools to interact with catalog service
+# OLM Tools you will need to configure RBAC for an Operator (from OLM)
 
 OperatorHub provides some scripts to interact and process catalog services  
 - OperatorHub for security reasons requires all extensions to be installed using their own serivce account (least privilege). 
@@ -88,12 +127,14 @@ Generate manifests for a specific bundle and version, .e.g
 ./generate-manifests install argocd-operator 0.6.0 < operatorhubio-catalog.json
 ```
 
+# To clean up
+
+kind delete cluster --name=olm-sample
 
 # To Do
 
 - investigate the prometheus install 
 - integrate with Istio (turn off TLS in ArgoCD)
-
 
 
 # Notes
