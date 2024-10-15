@@ -1,0 +1,21 @@
+# Not a great idea to install via Helm (should really get the resources and deploy)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-helm-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: kube-prometheus-stack
+    repoURL: https://prometheus-community.github.io/helm-charts
+    targetRevision: 0.77.1
+    helm:
+      releaseName: kube-prometheus-stack
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: kube-prometheus-stack
+  syncPolicy:
+    syncOptions:
+    - ApplyOutOfSyncOnly=true
+    
