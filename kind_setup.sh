@@ -71,19 +71,8 @@ echo "olm installed"
 
 # kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.23/samples/bookinfo/networking/bookinfo-gateway.yaml
 
-# echo "Installing ArgoCD Operator extension"
 
-# kubectl apply -f ./config/olm_v1alpha1_clusterextension.yaml
-
-# echo "Installing ArgoCD" 
-
-# kubectl wait --for=condition=Installed "clusterextensions/argocd" --timeout="60s"
-
-# kubectl apply -k ./platform-argocd
-
-# kubectl wait --for='jsonpath={.status.server}="Running"' argocd/platform-argocd -n platform --timeout="60s"
-
-# echo "ArgoCD running"
+echo "Installing ArgoCD" 
 
 kubectl create namespace argocd
 

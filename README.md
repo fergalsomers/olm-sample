@@ -91,36 +91,19 @@ Generate manifests for a specific bundle and version, .e.g
 
 # To Do
 
+- investigate the prometheus install 
 - integrate with Istio (turn off TLS in ArgoCD)
 
 
 
-# WIP
+# Notes
 
-OLM has issues (v1 vs ArgoCD) - switching to manual install of argocd
+OLM has issues (v1 vs ArgoCD)
 
+OLMv1 currently going under a transtion to v1 
+- ArgoCD not yet with the program (still mentions subscriptions as a means to control cluster-scoped behaviour). 
+- Have switched to manual install of ArgoCD)
 
-```
+Installing prometheus via OLM (seems to work)
+Installing kube-prometheus community setup. 
 
-~/build/git/olm-sample > kc get cm argocd-cmd-params-cm  -n argocd -o yaml
-apiVersion: v1
-data:
-  application.namespaces: '*'
-kind: ConfigMap
-metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","kind":"ConfigMap","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"argocd-cmd-params-cm","app.kubernetes.io/part-of":"argocd"},"name":"argocd-cmd-params-cm","namespace":"argocd"}}
-  creationTimestamp: "2024-10-14T19:55:04Z"
-  labels:
-    app.kubernetes.io/name: argocd-cmd-params-cm
-    app.kubernetes.io/part-of: argocd
-  name: argocd-cmd-params-cm
-  namespace: argocd
-  resourceVersion: "4931"
-  uid: b1c568d3-4e16-418c-b0e6-3ba5d4feef2d
-~/build/git/olm-sample > kubectl rollout restart -n argocd deployment argocd-server
-kubectl rollout restart -n argocd statefulset argocd-application-controller
-
-
-```
