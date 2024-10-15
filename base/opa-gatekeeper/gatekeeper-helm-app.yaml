@@ -16,6 +16,7 @@ spec:
     server: "https://kubernetes.default.svc"
     namespace: gatekeeper-system
   syncPolicy:
-    syncOptions:
-    - ApplyOutOfSyncOnly=true
+    automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
+      prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
+      selfHeal: true
     
