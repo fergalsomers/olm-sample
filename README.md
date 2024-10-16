@@ -63,19 +63,19 @@ See https://argocd-operator.readthedocs.io/en/latest/usage/basics/
 Next port-forward to argocd server
 
 ```
-kubectl port-forward -n platform service/platform-argocd-server 8001:80
+nohup kubectl port-forward -n platform service/platform-argocd-server 8001:80 &
 ```
 
-Click on following URL in your browser : https://localhost:8001/applications
+Click on following URL in your browser : http://localhost:8001/applications
 
 
 # To view Grafana
 
 ```
-kubectl port-forward -n monitoring service/grafana 3000
+nohup kubectl port-forward -n monitoring service/grafana 3000 &
 ```
 
-Click on following URL in your browser : https://localhost:3000/
+Click on following URL in your browser : http://localhost:3000/
 
 Uses the default grafana password admin/admin - you are prompted to change this on login.
 
