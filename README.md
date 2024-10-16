@@ -21,6 +21,7 @@ Contents
 
 # Pre-requisites
 
+1. Install [Docker](https://docs.docker.com/engine/install/)
 1. Install [kind](https://kind.sigs.k8s.io/) - for mac "brew install kind"
 1. Install [kubectl](https://kubernetes.io/docs/reference/kubectl/) - for mac "brew install kubectl"
 1. Install [git](https://git-scm.com/) - git comes with Xcode on mac. 
@@ -145,9 +146,8 @@ kind delete cluster --name=olm-sample
 
 # To Do
 
-- investigate the prometheus install 
-- integrate with Istio (turn off TLS in ArgoCD)
-
+- integrate with Istio (turn off TLS in ArgoCD
+- investigate using istioctl docker image to configure istio (removes a pre-requisite)
 
 # Notes
 

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cmd-params-cm
+data:
+  # Disable TLS for ArgoCD this will be provided by Istio Service Mesh
+  controller.repo.server.plaintext: "true"
+  server.insecure: "true"
+  server.repo.server.plaintext: "true"
+  server.dex.server.plaintext: "true"
