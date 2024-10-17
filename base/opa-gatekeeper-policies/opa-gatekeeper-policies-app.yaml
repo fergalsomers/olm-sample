@@ -2,21 +2,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prometheus-monitoring-app
+  name: opa-gatekeeper-policies-app
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "50"    
+    argocd.argoproj.io/sync-wave: "5"    
 spec:
   project: platform
   source:
-    repoURL: https://github.com/prometheus-operator/kube-prometheus
+    repoURL: https://github.com/open-policy-agent/gatekeeper-library
     targetRevision: HEAD
-    path: manifests
+    path: library
     # directory:  (switched to using kustomize for finer control during dev. )
     #   recurse: true # 
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring
   syncPolicy:
     automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
       prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).

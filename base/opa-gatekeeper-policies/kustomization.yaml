@@ -1,0 +1,3 @@
+resources:
+- ./opa-gatekeeper-policies-app.yaml
+- ./opa-gatekeeper-constraints-app.yaml
