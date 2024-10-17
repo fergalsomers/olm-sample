@@ -1,3 +1,18 @@
+<!---
+Copyright (c) [2024] Fergal Somers
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
 # Context  <!-- omit from toc -->
 This repo illustrates usage of [Operator Lifecycle Mangager](https://operator-framework.github.io/operator-controller/) (OLM) and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) to install standard services via GitOps
 on a local [kind](https://kind.sigs.k8s.io/) cluster.
@@ -160,4 +175,3 @@ OLMv1 currently going under a transtion to v1
 
 Installing prometheus via OLM (seems to work)
 Installing kube-prometheus community setup. 
-
