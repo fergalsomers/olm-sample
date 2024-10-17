@@ -42,8 +42,9 @@ This will:
 1. Create a kubeconfig in olm-sample directory. 
 1. Install the Operator Lifecycle Manager (OLMv1)
 1. Install ArgoCD in `argocd` namespace. 
+1. Install the `platform` ArgoCD project and applications - see [boot-application](/boot-application/). ArgoCD will then take over loading all the various parts of the platform from [base](/base/) via GITOps. 
 
-This ArgoCD will then start booting some default configurations:
+This base platform contains:
 
 - OPA Gatekeeper 
 - Prometheus Operator (via OLM) 
