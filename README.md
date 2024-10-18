@@ -51,13 +51,15 @@ cd olm-sample
 ./kind.sh
 ```
 
-This will:
+This can take 5-10 minutes - it is doing quite a lot: 
+
 
 1. Create a kind cluster call `olm-sample`
-1. Create a kubeconfig in olm-sample directory. 
-1. Install the Operator Lifecycle Manager (OLMv1)
-1. Install ArgoCD in `argocd` namespace. 
-1. Install the `platform` ArgoCD project and applications - see [boot-application](/boot-application/). ArgoCD will then take over loading all the various parts of the platform from [base](/base/) via GITOps. 
+2. Create a kubeconfig in olm-sample directory. 
+3. Install the Operator Lifecycle Manager (OLMv1)
+4. IN
+5. Install ArgoCD in `argocd` namespace. 
+6. Install the `platform` ArgoCD project and applications - see [boot-application](/boot-application/). ArgoCD will then take over loading all the various parts of the platform from [base](/base/) via GITOps. 
 
 This base platform contains:
 

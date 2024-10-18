@@ -57,17 +57,16 @@ EOF
 # Install the OLM operator (cert-manager and olm)
 ./olm-install.sh
 
-echo "olm installed"
+echo "... OLM installed"
 
+echo "Installing Istio.. " 
+
+./istio/setup.sh
+
+echo "... Istio installed" 
+
+# Istio demo app
 # This assumes you have Istio installed
-# echo "Installing Istio"
-
-# rm -rf istio-profile.yaml
-
-# envsubst < istio-profile-template.yaml > istio-profile.yaml 
-
-# istioctl install -f istio-profile.yaml -y
-
 
 # echo "Setting up default namespace for Istio"
 # kubectl label namespace default istio-injection=enabled
@@ -85,7 +84,7 @@ echo "olm installed"
 # kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.23/samples/bookinfo/networking/bookinfo-gateway.yaml
 
 
-echo "Installing ArgoCD" 
+echo "Installing ArgoCD ..." 
 
 kubectl create namespace argocd
 
@@ -100,3 +99,5 @@ echo "Installing the boot application"
 kubectl apply -k boot-application
 
 echo "Boot application has been configured" 
+
+echo "... ArgoCD Installed. Check ArgoCD application statuses!"
