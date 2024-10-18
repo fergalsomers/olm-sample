@@ -14,12 +14,23 @@ You may obtain a copy of the License at
 -->
 
 # Context  <!-- omit from toc -->
-This repo illustrates usage of [Operator Lifecycle Mangager](https://operator-framework.github.io/operator-controller/) (OLM) and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) to install standard services via GitOps
-on a local [kind](https://kind.sigs.k8s.io/) cluster.
+This repo illustrates usage of [Operator Lifecycle Mangager](https://operator-framework.github.io/operator-controller/) (OLM) and [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) to install standard platform services via GitOps on a local [kind](https://kind.sigs.k8s.io/) cluster.
 
 - OLM install taken originally from https://operator-framework.github.io/operator-controller/getting-started/olmv1_getting_started/
 - OLMv1 catalog upgraded to 0.31.0
 - built using kind - so that you can run kubernetes locally on your laptop.
+
+What are standard platform service? These are the services that every 
+Kubernetes clusters needs: 
+
+- ArgoCD for GITOps
+- ArgoWorkflow for orchestration tasks
+- ArgoRollouts for rollouts of services
+- OPA Gateway for policy enforcement
+- Istio service mesh for secure communication within your cluster. 
+- Prometheus monitoring stack for observability and alerting.
+
+The purpose of this is to illustrate that once you have a K8 cluster and ArgoCD installed, you can easily cookie-cutter a platform ready for developers to use. 
 
 Contents
 

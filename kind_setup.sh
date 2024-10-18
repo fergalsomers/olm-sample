@@ -65,28 +65,11 @@ echo "Installing Istio.. "
 
 echo "... Istio installed" 
 
-# Istio demo app
-# This assumes you have Istio installed
-
-# echo "Setting up default namespace for Istio"
-# kubectl label namespace default istio-injection=enabled
-
-# # echo "Installing CRD's"
-# kubectl get crd gateways.gateway.networking.k8s.io &> /dev/null || \
-#   { kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v1.1.0" | kubectl apply -f -; }
-
-
-# echo "Installing demo app" 
-# kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.23/samples/bookinfo/platform/kube/bookinfo.yaml
-
-# echo "Install the gateway"
-
-# kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.23/samples/bookinfo/networking/bookinfo-gateway.yaml
-
-
 echo "Installing ArgoCD ..." 
 
 kubectl create namespace argocd
+
+kubectl label namespace argocd istio-injection=enabled
 
 kubectl apply -k argocd-install
 
