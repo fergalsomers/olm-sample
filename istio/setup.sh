@@ -34,8 +34,3 @@ docker run -v $PWD/..:/wd \
  istio/istioctl:1.23.0 \
  install -f /wd/istio/istio-profile.yaml -y
 
-# docker run -v $PWD/..:/wd \
-#  -e KUBECONFIG=/wd/kubeconfig2 \
-#     --network=container:olm-sample-control-plane \
-#  istio/istioctl:1.23.0 \
-#  install -f /wd/istio-setup/istio-profile.yaml -y
