@@ -23,7 +23,7 @@ spec:
   source:
     repoURL: https://github.com/fergalsomers/olm-sample.git
     targetRevision: HEAD
-    path: base/opa-gatekeeper-policies/resources
+    path: base/opa-gatekeeper-policies/resources/constraints
     # directory:  (switched to using kustomize for finer control during dev. )
     #   recurse: true # 
   destination:

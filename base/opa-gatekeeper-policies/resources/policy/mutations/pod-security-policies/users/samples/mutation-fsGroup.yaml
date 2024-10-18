@@ -11,7 +11,19 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-resources:
-- ./namespace.yaml
-- ./platform-project.yaml
-- ./platform-app.yaml
+apiVersion: mutations.gatekeeper.sh/v1
+kind: Assign
+metadata:
+  name: k8spspfsgroup
+spec:
+  applyTo:
+  - groups: [""]
+    kinds: ["Pod"]
+    versions: ["v1"]
+  location: "spec.securityContext.fsGroup"
+  parameters:
+    pathTests:
+    - subPath: "spec.securityContext.fsGroup"
+      condition: MustNotExist
+    assign:
+      value: 3000

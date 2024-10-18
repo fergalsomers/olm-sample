@@ -21,31 +21,25 @@ spec:
       - apiGroups: [""]
         kinds: ["Pod"]
   parameters:
+    exemptImages:
+      - docker.io/istio*
     runAsUser:
       rule: MustRunAs # MustRunAsNonRoot # RunAsAny 
       ranges:
-        - min: 100
-          max: 200
-        - min: 65532 # nobody/non-root
+        - min: 1000
           max: 65534
     runAsGroup:
-      rule: MustRunAs # MayRunAs # RunAsAny 
+      rule: MayRunAs # MustRunAs MayRunAs # RunAsAny 
       ranges:
-        - min: 100
-          max: 200
-        - min: 65532
+        - min: 1000
           max: 65534
     supplementalGroups:
       rule: MayRunAs # MustRunAs MayRunAs # RunAsAny 
       ranges:
-        - min: 100
-          max: 200
-        - min: 65532
+        - min: 1000
           max: 65534
     fsGroup:
       rule: MayRunAs # MustRunAs MayRunAs # RunAsAny 
       ranges:
-        - min: 100
-          max: 200
-        - min: 65532
+        - min: 1000
           max: 65534

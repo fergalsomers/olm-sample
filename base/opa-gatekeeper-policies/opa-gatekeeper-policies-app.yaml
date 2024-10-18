@@ -21,9 +21,9 @@ metadata:
 spec:
   project: platform
   source:
-    repoURL: https://github.com/open-policy-agent/gatekeeper-library
+    repoURL: https://github.com/fergalsomers/olm-sample.git
     targetRevision: HEAD
-    path: library
+    path: base/opa-gatekeeper-policies/resources/policy
     # directory:  (switched to using kustomize for finer control during dev. )
     #   recurse: true # 
   destination:

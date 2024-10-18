@@ -12,6 +12,8 @@
 #  limitations under the License.
 
 resources:
-- ./namespace.yaml
-- ./platform-project.yaml
-- ./platform-app.yaml
+- ./mutation-fsGroup.yaml
+- ./mutation-mustRunAsNonRoot.yaml
+- ./mutation-runAsGroup.yaml
+- ./mutation-runAsUser.yaml
+- ./mutation-supplementalGroups.yaml
