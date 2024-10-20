@@ -22,11 +22,9 @@ metadata:
 spec:
   project: platform
   source:
-    repoURL: https://github.com/prometheus-operator/kube-prometheus
+    repoURL: https://github.com/fergalsomers/olm-sample.git
     targetRevision: HEAD
-    path: manifests/setup
-    # directory:  (switched to using kustomize for finer control during dev. )
-    #   recurse: true # 
+    path: base/prometheus-monitoring/resources
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
@@ -35,4 +33,4 @@ spec:
       prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
       selfHeal: true        
     syncOptions:
-    - ServerSideApply=true
+    - ServerSideApply=true  # necessary due to generated annotation lengths.
