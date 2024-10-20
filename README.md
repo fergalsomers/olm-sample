@@ -75,8 +75,7 @@ This can take 5-10 minutes - it is doing quite a lot:
 This base platform contains:
 
 - OPA Gatekeeper 
-- Prometheus Operator (via OLM) 
-- Kube-prometheus monitoring stack (via Prometheus operator) - https://github.com/prometheus-operator/kube-prometheus. This installs everything you need including Grafana and alertmanager (at least for dev). 
+- Kube-prometheus monitoring stack (includes Prometheus operator - i.e. not via OLM ) - https://github.com/prometheus-operator/kube-prometheus. This installs everything you need including Grafana and alertmanager (at least for dev). 
 
 # To view ArgoCD UI
 

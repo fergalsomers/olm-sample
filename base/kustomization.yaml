@@ -14,5 +14,4 @@
 resources:
 - ./opa-gatekeeper
 - ./opa-gatekeeper-policies
-# - ./prometheus-operator
 - ./prometheus-monitoring
