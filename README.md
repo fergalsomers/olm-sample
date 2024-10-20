@@ -185,5 +185,6 @@ OLMv1 currently going under a transtion to v1
 - ArgoCD not yet with the program (still mentions subscriptions as a means to control cluster-scoped behaviour). 
 - Have switched to manual install of ArgoCD)
 
-Installing prometheus via OLM (seems to work)
+Installing prometheus via OLM worked, but the kube-prometheus also installs an operator and this seems to have less problem (so switched to the kube-prometheus version). 
+
 Installing kube-prometheus community setup. 
