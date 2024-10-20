@@ -175,8 +175,8 @@ kind delete cluster --name=olm-sample
 
 # To Do
 
-- integrate with Istio (turn off TLS in ArgoCD
-- investigate using istioctl docker image to configure istio (removes a pre-requisite)
+- Expose services via Istio and Gateway
+
 
 # Notes
 

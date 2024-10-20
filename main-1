@@ -1,0 +1,589 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    istio.io/rev: default
+    kubectl.kubernetes.io/default-container: alertmanager
+    kubectl.kubernetes.io/default-logs-container: alertmanager
+    prometheus.io/path: /stats/prometheus
+    prometheus.io/port: "15020"
+    prometheus.io/scrape: "true"
+    sidecar.istio.io/status: '{"initContainers":["istio-init"],"containers":["istio-proxy"],"volumes":["workload-socket","credential-socket","workload-certs","istio-envoy","istio-data","istio-podinfo","istio-token","istiod-ca-cert"],"imagePullSecrets":null,"revision":"default"}'
+  creationTimestamp: "2024-10-18T15:45:04Z"
+  generateName: alertmanager-main-
+  labels:
+    alertmanager: main
+    app.kubernetes.io/component: alert-router
+    app.kubernetes.io/instance: main
+    app.kubernetes.io/managed-by: prometheus-operator
+    app.kubernetes.io/name: alertmanager
+    app.kubernetes.io/part-of: kube-prometheus
+    app.kubernetes.io/version: 0.27.0
+    apps.kubernetes.io/pod-index: "1"
+    controller-revision-hash: alertmanager-main-567fbcb9dd
+    security.istio.io/tlsMode: istio
+    service.istio.io/canonical-name: alertmanager
+    service.istio.io/canonical-revision: 0.27.0
+    statefulset.kubernetes.io/pod-name: alertmanager-main-1
+  name: alertmanager-main-1
+  namespace: monitoring
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: StatefulSet
+    name: alertmanager-main
+    uid: 2af6e1e7-53b1-4ce2-8806-75198aeb85db
+  resourceVersion: "4121"
+  uid: 5e7c3b30-57a9-41f4-bb61-53280f93057a
+spec:
+  containers:
+  - args:
+    - --config.file=/etc/alertmanager/config_out/alertmanager.env.yaml
+    - --storage.path=/alertmanager
+    - --data.retention=120h
+    - --cluster.listen-address=[$(POD_IP)]:9094
+    - --web.listen-address=:9093
+    - --web.route-prefix=/
+    - --cluster.label=monitoring/main
+    - --cluster.peer=alertmanager-main-0.alertmanager-operated:9094
+    - --cluster.peer=alertmanager-main-1.alertmanager-operated:9094
+    - --cluster.peer=alertmanager-main-2.alertmanager-operated:9094
+    - --cluster.reconnect-timeout=5m
+    - --web.config.file=/etc/alertmanager/web_config/web-config.yaml
+    env:
+    - name: POD_IP
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: status.podIP
+    image: quay.io/prometheus/alertmanager:v0.27.0
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      failureThreshold: 10
+      httpGet:
+        path: /app-health/alertmanager/livez
+        port: 15020
+        scheme: HTTP
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 3
+    name: alertmanager
+    ports:
+    - containerPort: 9093
+      name: web
+      protocol: TCP
+    - containerPort: 9094
+      name: mesh-tcp
+      protocol: TCP
+    - containerPort: 9094
+      name: mesh-udp
+      protocol: UDP
+    readinessProbe:
+      failureThreshold: 10
+      httpGet:
+        path: /app-health/alertmanager/readyz
+        port: 15020
+        scheme: HTTP
+      initialDelaySeconds: 3
+      periodSeconds: 5
+      successThreshold: 1
+      timeoutSeconds: 3
+    resources:
+      limits:
+        cpu: 100m
+        memory: 100Mi
+      requests:
+        cpu: 4m
+        memory: 100Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsGroup: 2000
+      runAsNonRoot: true
+      runAsUser: 1000
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: FallbackToLogsOnError
+    volumeMounts:
+    - mountPath: /etc/alertmanager/config
+      name: config-volume
+    - mountPath: /etc/alertmanager/config_out
+      name: config-out
+      readOnly: true
+    - mountPath: /etc/alertmanager/certs
+      name: tls-assets
+      readOnly: true
+    - mountPath: /alertmanager
+      name: alertmanager-main-db
+    - mountPath: /etc/alertmanager/web_config/web-config.yaml
+      name: web-config
+      readOnly: true
+      subPath: web-config.yaml
+  - args:
+    - --listen-address=:8080
+    - --reload-url=http://localhost:9093/-/reload
+    - --config-file=/etc/alertmanager/config/alertmanager.yaml.gz
+    - --config-envsubst-file=/etc/alertmanager/config_out/alertmanager.env.yaml
+    - --watched-dir=/etc/alertmanager/config
+    command:
+    - /bin/prometheus-config-reloader
+    env:
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
+    - name: SHARD
+      value: "-1"
+    image: quay.io/prometheus-operator/prometheus-config-reloader:v0.70.0
+    imagePullPolicy: IfNotPresent
+    name: config-reloader
+    ports:
+    - containerPort: 8080
+      name: reloader-web
+      protocol: TCP
+    resources:
+      limits:
+        cpu: 10m
+        memory: 50Mi
+      requests:
+        cpu: 10m
+        memory: 50Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsGroup: 2000
+      runAsNonRoot: true
+      runAsUser: 1000
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: FallbackToLogsOnError
+    volumeMounts:
+    - mountPath: /etc/alertmanager/config
+      name: config-volume
+      readOnly: true
+    - mountPath: /etc/alertmanager/config_out
+      name: config-out
+  - args:
+    - proxy
+    - sidecar
+    - --domain
+    - $(POD_NAMESPACE).svc.cluster.local
+    - --proxyLogLevel=warning
+    - --proxyComponentLogLevel=misc:error
+    - --log_output_level=default:info
+    env:
+    - name: PILOT_CERT_PROVIDER
+      value: istiod
+    - name: CA_ADDR
+      value: istiod.istio-system.svc:15012
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
+    - name: POD_NAMESPACE
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.namespace
+    - name: INSTANCE_IP
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: status.podIP
+    - name: SERVICE_ACCOUNT
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: spec.serviceAccountName
+    - name: HOST_IP
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: status.hostIP
+    - name: ISTIO_CPU_LIMIT
+      valueFrom:
+        resourceFieldRef:
+          divisor: "0"
+          resource: limits.cpu
+    - name: PROXY_CONFIG
+      value: |
+        {}
+    - name: ISTIO_META_POD_PORTS
+      value: |-
+        [
+            {"name":"web","containerPort":9093,"protocol":"TCP"}
+            ,{"name":"mesh-tcp","containerPort":9094,"protocol":"TCP"}
+            ,{"name":"mesh-udp","containerPort":9094,"protocol":"UDP"}
+            ,{"name":"reloader-web","containerPort":8080,"protocol":"TCP"}
+        ]
+    - name: ISTIO_META_APP_CONTAINERS
+      value: alertmanager,config-reloader
+    - name: GOMEMLIMIT
+      valueFrom:
+        resourceFieldRef:
+          divisor: "0"
+          resource: limits.memory
+    - name: GOMAXPROCS
+      valueFrom:
+        resourceFieldRef:
+          divisor: "0"
+          resource: limits.cpu
+    - name: ISTIO_META_CLUSTER_ID
+      value: Kubernetes
+    - name: ISTIO_META_NODE_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: spec.nodeName
+    - name: ISTIO_META_INTERCEPTION_MODE
+      value: REDIRECT
+    - name: ISTIO_META_WORKLOAD_NAME
+      value: alertmanager-main
+    - name: ISTIO_META_OWNER
+      value: kubernetes://apis/apps/v1/namespaces/monitoring/statefulsets/alertmanager-main
+    - name: ISTIO_META_MESH_ID
+      value: cluster.local
+    - name: TRUST_DOMAIN
+      value: cluster.local
+    - name: ISTIO_KUBE_APP_PROBERS
+      value: '{"/app-health/alertmanager/livez":{"httpGet":{"path":"/-/healthy","port":9093,"scheme":"HTTP"},"timeoutSeconds":3},"/app-health/alertmanager/readyz":{"httpGet":{"path":"/-/ready","port":9093,"scheme":"HTTP"},"timeoutSeconds":3}}'
+    image: docker.io/istio/proxyv2:1.23.0
+    imagePullPolicy: IfNotPresent
+    name: istio-proxy
+    ports:
+    - containerPort: 15090
+      name: http-envoy-prom
+      protocol: TCP
+    readinessProbe:
+      failureThreshold: 4
+      httpGet:
+        path: /healthz/ready
+        port: 15021
+        scheme: HTTP
+      periodSeconds: 15
+      successThreshold: 1
+      timeoutSeconds: 3
+    resources:
+      limits:
+        cpu: "2"
+        memory: 1Gi
+      requests:
+        cpu: 10m
+        memory: 40Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 1337
+      runAsNonRoot: true
+      runAsUser: 1337
+    startupProbe:
+      failureThreshold: 600
+      httpGet:
+        path: /healthz/ready
+        port: 15021
+        scheme: HTTP
+      periodSeconds: 1
+      successThreshold: 1
+      timeoutSeconds: 3
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/workload-spiffe-uds
+      name: workload-socket
+    - mountPath: /var/run/secrets/credential-uds
+      name: credential-socket
+    - mountPath: /var/run/secrets/workload-spiffe-credentials
+      name: workload-certs
+    - mountPath: /var/run/secrets/istio
+      name: istiod-ca-cert
+    - mountPath: /var/lib/istio/data
+      name: istio-data
+    - mountPath: /etc/istio/proxy
+      name: istio-envoy
+    - mountPath: /var/run/secrets/tokens
+      name: istio-token
+    - mountPath: /etc/istio/pod
+      name: istio-podinfo
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  hostname: alertmanager-main-1
+  initContainers:
+  - args:
+    - --watch-interval=0
+    - --listen-address=:8080
+    - --config-file=/etc/alertmanager/config/alertmanager.yaml.gz
+    - --config-envsubst-file=/etc/alertmanager/config_out/alertmanager.env.yaml
+    - --watched-dir=/etc/alertmanager/config
+    command:
+    - /bin/prometheus-config-reloader
+    env:
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
+    - name: SHARD
+      value: "-1"
+    image: quay.io/prometheus-operator/prometheus-config-reloader:v0.70.0
+    imagePullPolicy: IfNotPresent
+    name: init-config-reloader
+    ports:
+    - containerPort: 8080
+      name: reloader-web
+      protocol: TCP
+    resources:
+      limits:
+        cpu: 10m
+        memory: 50Mi
+      requests:
+        cpu: 10m
+        memory: 50Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsGroup: 2000
+      runAsNonRoot: true
+      runAsUser: 1000
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: FallbackToLogsOnError
+    volumeMounts:
+    - mountPath: /etc/alertmanager/config
+      name: config-volume
+      readOnly: true
+    - mountPath: /etc/alertmanager/config_out
+      name: config-out
+  - args:
+    - istio-iptables
+    - -p
+    - "15001"
+    - -z
+    - "15006"
+    - -u
+    - "1337"
+    - -m
+    - REDIRECT
+    - -i
+    - '*'
+    - -x
+    - ""
+    - -b
+    - '*'
+    - -d
+    - 15090,15021,15020
+    - --log_output_level=default:info
+    image: docker.io/istio/proxyv2:1.23.0
+    imagePullPolicy: IfNotPresent
+    name: istio-init
+    resources:
+      limits:
+        cpu: "2"
+        memory: 1Gi
+      requests:
+        cpu: 10m
+        memory: 40Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        add:
+        - NET_ADMIN
+        - NET_RAW
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: false
+      runAsGroup: 0
+      runAsNonRoot: false
+      runAsUser: 0
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+  nodeName: olm-sample-control-plane
+  nodeSelector:
+    kubernetes.io/os: linux
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext:
+    fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+    supplementalGroups:
+    - 3000
+  serviceAccount: alertmanager-main
+  serviceAccountName: alertmanager-main
+  subdomain: alertmanager-operated
+  terminationGracePeriodSeconds: 120
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - emptyDir: {}
+    name: workload-socket
+  - emptyDir: {}
+    name: credential-socket
+  - emptyDir: {}
+    name: workload-certs
+  - emptyDir:
+      medium: Memory
+    name: istio-envoy
+  - emptyDir: {}
+    name: istio-data
+  - downwardAPI:
+      defaultMode: 420
+      items:
+      - fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.labels
+        path: labels
+      - fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.annotations
+        path: annotations
+    name: istio-podinfo
+  - name: istio-token
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          audience: istio-ca
+          expirationSeconds: 43200
+          path: istio-token
+  - configMap:
+      defaultMode: 420
+      name: istio-ca-root-cert
+    name: istiod-ca-cert
+  - name: config-volume
+    secret:
+      defaultMode: 420
+      secretName: alertmanager-main-generated
+  - name: tls-assets
+    projected:
+      defaultMode: 420
+      sources:
+      - secret:
+          name: alertmanager-main-tls-assets-0
+  - emptyDir:
+      medium: Memory
+    name: config-out
+  - name: web-config
+    secret:
+      defaultMode: 420
+      secretName: alertmanager-main-web-config
+  - emptyDir: {}
+    name: alertmanager-main-db
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2024-10-18T15:46:26Z"
+    status: "True"
+    type: PodReadyToStartContainers
+  - lastProbeTime: null
+    lastTransitionTime: "2024-10-18T15:46:31Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2024-10-18T15:46:53Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2024-10-18T15:46:53Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2024-10-18T15:45:04Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: containerd://571c9616f09081cb4b62fee691bb00f6af3910bc1ff46d2aca52fc6922483dd8
+    image: quay.io/prometheus/alertmanager:v0.27.0
+    imageID: quay.io/prometheus/alertmanager@sha256:e13b6ed5cb929eeaee733479dce55e10eb3bc2e9c4586c705a4e8da41e5eacf5
+    lastState: {}
+    name: alertmanager
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2024-10-18T15:46:49Z"
+  - containerID: containerd://b8acf7410697b5fb66bb027693e9353cce0f075b6ae67b7c918dc4ae965bbb15
+    image: quay.io/prometheus-operator/prometheus-config-reloader:v0.70.0
+    imageID: quay.io/prometheus-operator/prometheus-config-reloader@sha256:e20576b76ffd85d2a28d62809092f47b339737320e80646ec6d0e7ac0f4c8e43
+    lastState: {}
+    name: config-reloader
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2024-10-18T15:46:52Z"
+  - containerID: containerd://62c9072fd054d98ea4c52e5d6c0dc660fae4828b89c1ec8b9e7a089eed250808
+    image: docker.io/istio/proxyv2:1.23.0
+    imageID: docker.io/istio/proxyv2@sha256:c4283a0c7c252e5a634c5614296fc5cb61d23588e8fa905deb68c96c51efc935
+    lastState: {}
+    name: istio-proxy
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2024-10-18T15:46:52Z"
+  hostIP: 172.18.0.2
+  hostIPs:
+  - ip: 172.18.0.2
+  initContainerStatuses:
+  - containerID: containerd://4a8ec16d4b064384dd31c57c1cb3709fb729feb6793d1ad3442c0646f2bc8840
+    image: quay.io/prometheus-operator/prometheus-config-reloader:v0.70.0
+    imageID: quay.io/prometheus-operator/prometheus-config-reloader@sha256:e20576b76ffd85d2a28d62809092f47b339737320e80646ec6d0e7ac0f4c8e43
+    lastState: {}
+    name: init-config-reloader
+    ready: true
+    restartCount: 0
+    started: false
+    state:
+      terminated:
+        containerID: containerd://4a8ec16d4b064384dd31c57c1cb3709fb729feb6793d1ad3442c0646f2bc8840
+        exitCode: 0
+        finishedAt: "2024-10-18T15:46:30Z"
+        reason: Completed
+        startedAt: "2024-10-18T15:46:25Z"
+  - containerID: containerd://6f462c773f5fd76218f3a031f42689f915f2b2460f597b9f50e45fb4e1dbccfa
+    image: docker.io/istio/proxyv2:1.23.0
+    imageID: docker.io/istio/proxyv2@sha256:c4283a0c7c252e5a634c5614296fc5cb61d23588e8fa905deb68c96c51efc935
+    lastState: {}
+    name: istio-init
+    ready: true
+    restartCount: 0
+    started: false
+    state:
+      terminated:
+        containerID: containerd://6f462c773f5fd76218f3a031f42689f915f2b2460f597b9f50e45fb4e1dbccfa
+        exitCode: 0
+        finishedAt: "2024-10-18T15:46:30Z"
+        reason: Completed
+        startedAt: "2024-10-18T15:46:30Z"
+  phase: Running
+  podIP: 10.244.0.35
+  podIPs:
+  - ip: 10.244.0.35
+  qosClass: Burstable
+  startTime: "2024-10-18T15:45:04Z"
