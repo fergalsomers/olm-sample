@@ -13,4 +13,5 @@
 
 resources:
 - ./namespace.yaml
+- ./prometheus-monitoring-crds-app.yaml
 - ./prometheus-monitoring-app.yaml
