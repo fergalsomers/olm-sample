@@ -55,9 +55,9 @@ nodes:
 EOF
 
 # Install the OLM operator (cert-manager and olm)
-./olm-install.sh
-
-echo "... OLM installed"
+# ./olm-install.sh
+# 
+# echo "... OLM installed"
 
 echo "Installing Istio.. " 
 
