@@ -28,3 +28,10 @@ Constraints are intended to be tailored to your use-case, I've included some tak
 ```
 git clone https://github.com/open-policy-agent/gatekeeper-library.git
 ```
+
+# Notes
+
+In order to get Argo Workflow to install, the following customizations of OPA policy were required. 
+
+1. [mutation mustRunAsNonRoot](/base/opa-gatekeeper-policies/resources/policy/mutations/pod-security-policies/users/samples/mutation-mustRunAsNonRoot.yaml) - which set nonRoot (if unset) - excludes argo namespace  because httpbin and minio need to run as root. 
+2. [constraint users](/base/opa-gatekeeper-policies/resources/constraints/users/constraint.yaml) - which requires non-roots user to be set (is a knock on the the previous issue). 

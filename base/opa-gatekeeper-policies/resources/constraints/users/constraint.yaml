@@ -20,11 +20,11 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    excludedNamespaces:
+      - "argo"  # Argo Workflow does not conform to this policy.
   parameters:
     exemptImages:
       - docker.io/istio*   # Istio
-      - kong/httpbin       # argo/httpbin (Argo Workflow)
-      - minio/minio*       # argo/minio   (Argo Workflow)
     runAsUser:
       rule: MustRunAs # MustRunAsNonRoot # RunAsAny 
       ranges:
