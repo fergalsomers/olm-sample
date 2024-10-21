@@ -11,9 +11,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-resources:
-- ./opa-gatekeeper
-- ./opa-gatekeeper-policies
-- ./prometheus-monitoring
-- ./argo-workflow
-
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argo
+  labels:
+    istio-injection: enabled

@@ -12,8 +12,5 @@
 #  limitations under the License.
 
 resources:
-- ./opa-gatekeeper
-- ./opa-gatekeeper-policies
-- ./prometheus-monitoring
-- ./argo-workflow
-
+- ./namespace.yaml
+- https://raw.githubusercontent.com/argoproj/argo-workflows/refs/heads/release-3.5/manifests/quick-start-minimal.yaml
