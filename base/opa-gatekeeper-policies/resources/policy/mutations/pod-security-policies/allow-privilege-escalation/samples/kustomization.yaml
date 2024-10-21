@@ -12,7 +12,4 @@
 #  limitations under the License.
 
 resources:
-- github.com/open-policy-agent/gatekeeper-library/library?ref=master
-# mutations
-- ./mutations/pod-security-policies/users/samples
-- ./mutations/pod-security-policies/allow-privilege-escalation/samples
+- ./mutation.yaml
