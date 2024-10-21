@@ -24,7 +24,7 @@ spec:
   source:
     repoURL: https://github.com/fergalsomers/olm-sample.git
     targetRevision: HEAD
-    path: base/argo-worfklow/resources
+    path: base/argo-workflow/resources
     # directory:  (switched to using kustomize for finer control during dev. )
     #   recurse: true # 
   destination:
