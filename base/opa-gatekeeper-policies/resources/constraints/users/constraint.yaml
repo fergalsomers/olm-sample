@@ -22,7 +22,9 @@ spec:
         kinds: ["Pod"]
   parameters:
     exemptImages:
-      - docker.io/istio*
+      - docker.io/istio*   # Istio
+      - kong/httpbin       # argo/httpbin (Argo Workflow)
+      - minio/minio*       # argo/minio   (Argo Workflow)
     runAsUser:
       rule: MustRunAs # MustRunAsNonRoot # RunAsAny 
       ranges:

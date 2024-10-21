@@ -11,19 +11,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-apiVersion: constraints.gatekeeper.sh/v1beta1
-kind: K8sPSPAllowPrivilegeEscalationContainer
+apiVersion: config.gatekeeper.sh/v1alpha1
+kind: Config
 metadata:
-  name: psp-allow-privilege-escalation-container
+  name: config
+  namespace: "gatekeeper-system"
 spec:
   match:
-    kinds:
-      - apiGroups: [""]
-        kinds: ["Pod"]
-    excludedNamespaces:
-      - kube-system
-      - istio-system
-      - local-path-storage 
-  # enforcementAction: warn
-  # parameters:
-  #   exemptImages: ["safeimages.com/*"]
+    - excludedNamespaces: ["kube-*"]  # exclude kube-* namespaces from gatekeeper 
+      processes: ["*"]
