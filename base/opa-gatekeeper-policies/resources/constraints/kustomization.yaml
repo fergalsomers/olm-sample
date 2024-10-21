@@ -12,5 +12,5 @@
 #  limitations under the License.
 
 resources:
-- ./allow-privilege-escalation/constraint.yaml
+#- ./allow-privilege-escalation/constraint.yaml
 - ./users/constraint.yaml
