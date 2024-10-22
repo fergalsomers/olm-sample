@@ -24,11 +24,12 @@ What are standard platform service? These are the services that every
 Kubernetes clusters needs: 
 
 - ArgoCD for GITOps
+- Istio service mesh for secure communication within your cluster. 
 - ArgoWorkflow for orchestration tasks
 - ArgoRollouts for rollouts of services
 - OPA Gateway for policy enforcement
-- Istio service mesh for secure communication within your cluster. 
-- Prometheus monitoring stack for observability and alerting.
+- Prometheus monitoring stack for observability and alerting
+- Istio configurations to access ArgoCD and Grafana directly from your laptop
 
 The purpose of this is to illustrate that once you have a K8 cluster and ArgoCD installed, you can easily cookie-cutter a platform ready for developers to use. 
 
@@ -79,33 +80,38 @@ This base platform contains:
 
 # To view ArgoCD UI
 
-First get the password
+First get the password for the ArgoCD `admin` user, run:
 
 ```
-kubectl -n platform get secret platform-argocd-cluster -o jsonpath='{.data.admin\.password}' | base64 -d
+> kubectl -n platform get secret platform-argocd-cluster \
+    -o jsonpath='{.data.admin\.password}' | base64 -d
 ```
 
-See https://argocd-operator.readthedocs.io/en/latest/usage/basics/
+Then click on following URL in your browser : [http://localhost:8081/](http://localhost:8081)
+- Istio has been configured to listen on the 8081 is a host port exposed by the Kind cluster. 
 
 
-Next port-forward to argocd server
+Alternatively, you can use kubectl to port-forward directly to the grafana service, run :
 
 ```
-nohup kubectl port-forward -n platform service/platform-argocd-server 8001:80 &
+> nohup kubectl port-forward -n platform service/platform-argocd-server 8080:80 &
 ```
 
-Click on following URL in your browser : http://localhost:8001/applications
+and then click on following URL in your browser : http://localhost:8080/
 
 
 # To view Grafana
 
+Simply click on following URL in your browser : [http://127.0.0.1:8081/](http://127.0.0.1:8081)
+
+- Use the default grafana password admin/admin - you are prompted to change this on login.
+
+Alternatively,  you can use kubectl to port-forward directly to the grafana service, run : 
 ```
-nohup kubectl port-forward -n monitoring service/grafana 3000 &
+> nohup kubectl port-forward -n monitoring service/grafana 3000 &
 ```
 
-Click on following URL in your browser : http://localhost:3000/
-
-Uses the default grafana password admin/admin - you are prompted to change this on login.
+and then on following URL in your browser : http://localhost:3000/
 
 
 # To run queries against the OLM catalog
@@ -188,3 +194,5 @@ OLMv1 currently going under a transtion to v1
 Installing prometheus via OLM worked, but the kube-prometheus also installs an operator and this seems to have less problem (so switched to the kube-prometheus version). 
 
 Installing kube-prometheus community setup. 
+
+Istio gateways match on hostnames, and we have bound ArgoCD and Grafana virtual services to `localhost` and `127.0.0.1` to allow them to both be served. A little hack-y admittedly but it works for laptop based access. Obviously a real setup would have proper DNS sub-domains. 
