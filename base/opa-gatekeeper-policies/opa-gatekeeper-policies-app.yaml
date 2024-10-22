@@ -14,7 +14,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: opa-gatekeeper-policies-app
+  name: opa-gatekeeper-policies
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "5"    

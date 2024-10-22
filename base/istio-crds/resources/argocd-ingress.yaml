@@ -11,9 +11,23 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-resources:
-- ./opa-gatekeeper
-- ./istio-crds
-- ./opa-gatekeeper-policies
-- ./prometheus-monitoring
-- ./argo-workflow
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: argocd-ingress
+  namespace: argocd
+spec:
+  podSelector:
+    matchLabels:
+       app.kubernetes.io/name: argocd-server
+  ingress:
+  - ports:
+    - protocol: TCP
+      port: 80
+    from:
+    - podSelector:
+        matchLabels:
+          istio: ingress
+      namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: istio-system

@@ -11,9 +11,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-resources:
-- ./opa-gatekeeper
-- ./istio-crds
-- ./opa-gatekeeper-policies
-- ./prometheus-monitoring
-- ./argo-workflow
+apiVersion: telemetry.istio.io/v1
+kind: Telemetry
+metadata:
+  name: mesh-default
+  namespace: istio-system
+spec:
+  accessLogging:
+    - providers:
+      - name: envoy

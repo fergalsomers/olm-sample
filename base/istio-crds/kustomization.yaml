@@ -12,8 +12,5 @@
 #  limitations under the License.
 
 resources:
-- ./opa-gatekeeper
-- ./istio-crds
-- ./opa-gatekeeper-policies
-- ./prometheus-monitoring
-- ./argo-workflow
+- ./istio-crds-app.yaml
+

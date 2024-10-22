@@ -11,9 +11,19 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-resources:
-- ./opa-gatekeeper
-- ./istio-crds
-- ./opa-gatekeeper-policies
-- ./prometheus-monitoring
-- ./argo-workflow
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - istio-system/internal-service-gateway
+  http:
+  - route:
+    - destination:
+        host: argocd-server.argocd.svc.cluster.local
+        port:
+          number: 80
