@@ -60,7 +60,7 @@ Clone the repo and
 ```
 git clone https://github.com/fergalsomers/olm-sample.git
 cd olm-sample
-./kind.sh
+./kind-setup.sh
 ```
 
 This can take 5-10 minutes - it is doing quite a lot: 

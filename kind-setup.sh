@@ -55,6 +55,8 @@ nodes:
 EOF
 
 # Install the OLM operator (cert-manager and olm)
+# - optionally you can uncomment this to install OLM 
+#
 # ./olm-install.sh
 # 
 # echo "... OLM installed"
@@ -65,19 +67,15 @@ echo "Installing Istio.. "
 
 echo "... Istio installed" 
 
-echo "Installing ArgoCD ..." 
+echo "Installing ArgoCD via Kustomize  ..." 
 
-kubectl create namespace argocd
-
-kubectl label namespace argocd istio-injection=enabled
-
-kubectl apply -k argocd-install
+kubectl apply -k argocd
 
 kubectl wait --for='jsonpath={.status.availableReplicas}'=1 deployment/argocd-server -n  argocd --timeout="60s"
 
 echo "ArgoCD is running"
 
-echo "Installing the boot application" 
+echo "Installing the boot application via Kustomize " 
 
 kubectl apply -k boot-application
 

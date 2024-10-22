@@ -11,19 +11,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-resources:
-- https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-
-patches: 
-- path: ./argocd-cm.yaml                  # app-of-apps sync waves
-- path: ./argocd-cmd-params-cm.yaml       # configure TLS false
-- patch: |-                               # Annoyingly not all can be done via configs you need to set cmdline arg
-    - op: add
-      path: /spec/template/spec/containers/0/args/1
-      value: --disable-tls
-  target:
-    version: v1
-    kind: Deployment
-    name: argocd-repo-server
-
-namespace: argocd
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argocd
+  labels:
+    istio-injection: enabled
